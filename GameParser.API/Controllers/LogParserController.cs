@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+﻿using GameParser.API.Interfaces;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GameParser.API.Controllers
@@ -7,9 +8,18 @@ namespace GameParser.API.Controllers
     [Route("[controller]")]
     public class LogParserController : ControllerBase
     {
-        public IActionResult Index()
+        private readonly ILogParserService _parser;
+
+        public LogParserController(ILogParserService parser)
         {
-            return Ok("OK");
+            this._parser = parser;
+        }
+
+        [HttpGet]
+        public IActionResult Get()
+        {
+            var result = _parser.Parse();
+            return Ok(result);
         }
     }
 }

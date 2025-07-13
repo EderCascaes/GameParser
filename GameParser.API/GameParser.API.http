@@ -1,6 +1,6 @@
 @GameParser.API_HostAddress = http://localhost:5129
 
-GET {{GameParser.API_HostAddress}}/weatherforecast/
+GET {{GameParser.API_HostAddress}}/LogParser/
 Accept: application/json
 
 ###

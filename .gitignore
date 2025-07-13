@@ -1,0 +1,69 @@
+## Compilados do Visual Studio
+bin/
+obj/
+*.exe
+*.dll
+*.pdb
+*.cache
+*.log
+
+## Diretórios do usuário
+.vscode/
+.vs/
+.idea/
+
+## Arquivos do Visual Studio
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## Diretórios de build
+build/
+Build/
+
+## Arquivos de pacotes NuGet
+*.nupkg
+*.snupkg
+packages/
+*.nuspec
+*.psmdcp
+
+## Cache do NuGet
+.nuget/
+
+## Configuração local
+appsettings.Development.json
+appsettings.Local.json
+
+## Arquivos temporários
+*.tmp
+*.bak
+*.swp
+*.sln.docstates
+
+## Logs
+*.log
+
+## Testes
+TestResults/
+*.coverage
+*.coveragexml
+
+## Arquivos de publicação
+publish/
+*.Publish.xml
+
+## Configurações do Rider
+.idea/
+
+## Configurações do JetBrains
+*.DotSettings.user
+
+## Arquivos gerados por ferramentas
+Generated_Code/
+
+## Outros comuns
+Thumbs.db
+ehthumbs.db
+Desktop.ini

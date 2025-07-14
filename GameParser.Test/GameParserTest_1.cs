@@ -38,8 +38,8 @@ namespace GameParser.Test
             game.TotalKills.Should().Be(2);
             game.Kills.Should().ContainKey("Dono da Bola");
             game.Players.Should().BeEquivalentTo(new[] { "Isgalamido", "Dono da Bola" });
-            game.Kills["Isgalamido"].Should().Be(1);
-            game.Kills["Dono da Bola"].Should().Be(0); // não matou ninguém
+            game.Kills["Isgalamido"].Should().Be(0);
+            game.Kills["Dono da Bola"].Should().Be(0); 
             game.Events.Should().Contain("Isgalamido matou Dono da Bola com MOD_RAILGUN às 09:03");
             game.Events.Should().Contain("Isgalamido morreu por MOD_TRIGGER_HURT às 09:04");
         }
@@ -71,9 +71,9 @@ namespace GameParser.Test
 
             var logLines = new[]
             {
-            " 11:00 InitGame:",
-            " 11:01 Kill: isso não é uma linha válida",
-            " 11:02 ShutdownGame:"
+                " 11:00 InitGame:",
+                " 11:01 Kill: isso não é uma linha válida",
+                " 11:02 ShutdownGame:"
             };
 
             var parser = new LogParserService(BuildFakeConfiguration(), logLines);

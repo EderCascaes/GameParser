@@ -46,19 +46,28 @@ namespace GameParser.API.Services
                         };
                         games.Add(currentGame);
                         playerIdToName.Clear();
-                        Console.WriteLine($"[DEBUG] Novo jogo iniciado às {lineTime:HH:mm}");
+                      //  Console.WriteLine($"[DEBUG] Novo jogo iniciado às {lineTime:HH:mm}");
                     }
                     else if (line.Contains("ShutdownGame") && currentGame != null)
                     {
                         currentGame.EndTime = lineTime;
+
+                        foreach (var player in currentGame.Players)
+                        {
+                            if (!currentGame.Kills.ContainsKey(player))
+                            {
+                                currentGame.Kills[player] = 0;
+                            }
+                        }
+
+                     //   Console.WriteLine($"[DEBUG] Jogo encerrado às {lineTime:HH:mm}");
                         currentGame = null;
-                        Console.WriteLine($"[DEBUG] Jogo encerrado às {lineTime:HH:mm}");
                     }
                     else if (currentGame != null)
                     {
                         if (line.Contains("ClientUserinfoChanged"))
                         {
-                            var id = line.Split(':')[1].Trim().Split(' ')[0];
+                            var id = ExtractNumber(line);
                             var match = Regex.Match(line, @"n\\(?<name>.+?)\\");
                             var playerName = match.Success ? match.Groups["name"].Value : "Unknown";
 
@@ -67,7 +76,7 @@ namespace GameParser.API.Services
                             if (!string.IsNullOrEmpty(playerName) && !currentGame.Players.Contains(playerName))
                                 currentGame.Players.Add(playerName);
 
-                            Console.WriteLine($"[DEBUG] Mapeado ID {id} ␦ {playerName}");
+                        //    Console.WriteLine($"[DEBUG] Mapeado ID {id} ␦ {playerName}");
                         }
                         else if (line.Contains("Kill:"))
                         {
@@ -75,7 +84,6 @@ namespace GameParser.API.Services
 
                             var parts = line.Split(':');
                             var killData = parts.Last().Trim();
-                            var idPart = parts[1].Trim().Split(' ')[0];
 
                             var killInfo = killData.Split(" by ");
                             var killAction = killInfo[0].Split(" killed ");
@@ -86,13 +94,8 @@ namespace GameParser.API.Services
                                 var killerRaw = killAction[0].Trim();
                                 var victimRaw = killAction[1].Trim();
 
-                                string killer = killerRaw;
-                                string victim = victimRaw;
-
-                                if (playerIdToName.ContainsKey(killerRaw))
-                                    killer = playerIdToName[killerRaw];
-                                if (playerIdToName.ContainsKey(victimRaw))
-                                    victim = playerIdToName[victimRaw];
+                                string killer = playerIdToName.ContainsKey(killerRaw) ? playerIdToName[killerRaw] : killerRaw;
+                                string victim = playerIdToName.ContainsKey(victimRaw) ? playerIdToName[victimRaw] : victimRaw;
 
                                 if (killer == "<world>")
                                 {
@@ -120,8 +123,9 @@ namespace GameParser.API.Services
             catch (Exception ex)
             {
                 Console.WriteLine("Erro ao ler arquivo: " + ex.Message);
-                return default;
+                return new List<GameLog>();
             }
+
         }
 
 
@@ -135,6 +139,20 @@ namespace GameParser.API.Services
         {
             DateTime.TryParseExact(rawTime, "H:mm", provider, DateTimeStyles.None, out var result);
             return result;
+        }
+
+        static string ExtractNumber(string line)
+        {
+            // Procurar pela parte "ClientUserinfoChanged:" e pegar o número seguinte
+            var parts = line.Split(new string[] { "ClientUserinfoChanged:" }, StringSplitOptions.None);
+            if (parts.Length > 1)
+            {
+                // Limpar o espaço e pegar o primeiro número após "ClientUserinfoChanged:"
+                var subParts = parts[1].Trim().Split(' ');
+                return subParts[0];
+            }
+
+            return string.Empty; // Caso não encontre o padrão
         }
     }
 }

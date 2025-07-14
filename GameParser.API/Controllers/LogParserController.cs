@@ -1,5 +1,4 @@
 ﻿using GameParser.API.Interfaces;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GameParser.API.Controllers

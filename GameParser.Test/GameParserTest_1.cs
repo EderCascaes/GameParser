@@ -43,13 +43,14 @@ namespace GameParser.Test
             game.Events.Should().Contain("Isgalamido matou Dono da Bola com MOD_RAILGUN às 09:03");
             game.Events.Should().Contain("Isgalamido morreu por MOD_TRIGGER_HURT às 09:04");
         }
-
         [Fact]
         public void Should_Ignore_Blank_Lines_Or_Spaces()
         {
             //Deve_Ignorar_Linhas_Em_Branco_Ou_Espacos
+
+            // Arrange
             var logLines = new[]
-            {
+                    {
                 "",
                 "    ",
                 " 10:00 InitGame:",
@@ -57,8 +58,11 @@ namespace GameParser.Test
             };
 
             var parser = new LogParserService(BuildFakeConfiguration(), logLines);
+
+            // Act
             var result = parser.Parse();
 
+            // Assert
             result.Should().HaveCount(1);
             result[0].Players.Should().BeEmpty();
             result[0].TotalKills.Should().Be(0);
@@ -69,6 +73,7 @@ namespace GameParser.Test
         {
             //Deve_Ignorar_Kills_Malformados_E_Contar_Total
 
+            // Arrange
             var logLines = new[]
             {
                 " 11:00 InitGame:",
@@ -77,8 +82,11 @@ namespace GameParser.Test
             };
 
             var parser = new LogParserService(BuildFakeConfiguration(), logLines);
+
+            // Act
             var result = parser.Parse();
 
+            // Assert
             result.Should().HaveCount(1);
             result[0].TotalKills.Should().Be(1); // ainda conta 1 kill
             result[0].Events.Should().BeEmpty(); // mas não gera evento porque não foi parseado corretamente

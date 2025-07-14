@@ -143,16 +143,14 @@ namespace GameParser.API.Services
 
         static string ExtractNumber(string line)
         {
-            // Procurar pela parte "ClientUserinfoChanged:" e pegar o número seguinte
             var parts = line.Split(new string[] { "ClientUserinfoChanged:" }, StringSplitOptions.None);
             if (parts.Length > 1)
             {
-                // Limpar o espaço e pegar o primeiro número após "ClientUserinfoChanged:"
                 var subParts = parts[1].Trim().Split(' ');
                 return subParts[0];
             }
 
-            return string.Empty; // Caso não encontre o padrão
+            return string.Empty; 
         }
     }
 }
